@@ -22,10 +22,11 @@ export async function createTodoForUser( userId: string, createTodoRequest : Cre
             userId: userId,
             todoId: todoItemId,
             createdAt: new Date().toISOString(),
-            name: createTodoRequest.name,
-            dueDate: createTodoRequest.dueDate,
+            // name: createTodoRequest.name,
+            // dueDate: createTodoRequest.dueDate,
             done: false,
-            attachmentUrl: null
+            attachmentUrl: null,
+            ...createTodoRequest
           }
         )
         return item;

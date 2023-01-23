@@ -4,21 +4,15 @@ import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { getUserId } from '../utils';
-// import * as AWS from 'aws-sdk'
 import { createTodoForUser } from '../../businessLogic/todos';
-// import { TodoItem } from '../../models/TodoItem'
+import { createLogger } from '../../utils/logger'
 
-
-
-
-// const todosTable = process.env.GROUPS_TABLE;
-// const docClient = new AWS.DynamoDB.DocumentClient();
-
+const logger = createLogger(`CreateTodo`)
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const newTodo: CreateTodoRequest = JSON.parse(event.body)
     // TODO: Implement creating a new TODO item
-    const userId = getUserId(event);
+    const userId = await getUserId(event);
  
 
     const item = await createTodoForUser(userId, newTodo)
@@ -28,6 +22,8 @@ export const handler = middy(
   //   TableName: todosTable,
   //   Item: newTodoItem
   // }).promise();
+  if(item) {
+    logger.info(`Item exists`)
     return {
       statusCode: 201,
       headers: {
@@ -38,7 +34,10 @@ export const handler = middy(
         item: item
       })
     }
+  } else {
+    logger.info(`Item Not exist`)
   }
+}
 )
 
 handler.use(
