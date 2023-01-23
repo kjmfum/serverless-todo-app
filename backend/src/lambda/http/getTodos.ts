@@ -17,10 +17,11 @@ export const handler = middy(
     let todos = await getTodosForUser(userId)
     
     
-    if(todos.length === 0 || todos !== undefined) {
+    if(todos.length === 0 || todos === undefined) {
       logger.error(`No Todos to fetch`)
       todos = []
-      
+    }  else {
+      logger.info(`Todos exist}`, ) 
     }
     
     return {
